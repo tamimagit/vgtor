@@ -27,7 +27,7 @@ class MobileBankingController extends Controller
     public function add(Request $request)
     {
         if (!$request->isMethod('post')) {
-            $country = Country::pluck('short_name', 'id');
+            $country = Country::pluck('name', 'id');
             return view('admin.mobileBanking.add', compact(['country']));
         } elseif ($request->isMethod('post')) {
             $rules = array(
@@ -81,7 +81,7 @@ class MobileBankingController extends Controller
     {
         if (!$request->isMethod('post')) {
             $data['result'] = MobileBanking::find($request->id);
-            $data['result']['country'] = Country::pluck('short_name', 'id');
+            $data['result']['country'] = Country::pluck('name', 'id');
             return view('admin.mobileBanking.edit', $data);
         } elseif ($request->isMethod('post')) {
             $rules = array(
