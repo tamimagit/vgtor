@@ -59,7 +59,7 @@
                         <div class="form-group">
                           <label for="exampleInputPassword1" class="control-label">Amount<span class="text-danger">*</span></label>
                           <input type="text" class="form-control text-14" name="amount" id="amount" value="{{old('amount')}}">
-                          @if ($errors->has('amount')) <p class="error-tag">{{ $errors->first('amount') }}</p> 
+                          @if ($errors->has('amount')) <p class="error-tag">{{ $errors->first('amount') }}</p>
                           @endif
                         </div>
                     </div>

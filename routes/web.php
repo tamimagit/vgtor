@@ -413,6 +413,9 @@ Route::group(['middleware' => ['guest:users', 'locale']], function () {
     Route::match(['GET', 'POST'], 'users/payout-list', 'PayoutController@payoutList');
     Route::match(['GET', 'POST'], 'users/payout/success', 'PayoutController@success');
 
+    // On country change get mobile banking
+    Route::get('get-mobile-banking', 'PayoutController@getMobileBanking')->name('get-mobile-banking');
+
     Route::match(['get', 'post'], 'users/security', 'UserController@security');
     Route::get('logout', function () {
         Auth::logout();

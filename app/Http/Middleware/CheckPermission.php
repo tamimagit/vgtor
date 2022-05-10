@@ -14,7 +14,7 @@ class CheckPermission
     {
         $this->helper = $helper;
     }
-    
+
     public function handle($request, Closure $next, $permissions)
     {
         if ($this->helper->has_permission(\Auth::guard('admin')->user()->id, $permissions)) {

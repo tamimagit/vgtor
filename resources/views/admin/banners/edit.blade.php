@@ -1,7 +1,7 @@
-@php 
+@php
 $form_data = [
     'page_title'=> 'Edit Banners',
-    'page_subtitle'=> 'Edit Banners', 
+    'page_subtitle'=> 'Edit Banners',
     'form_name' => 'Edit Banners',
     'form_id' => 'edit_banners',
     'action' => URL::to('/').'/admin/settings/edit-banners/'.$result->id,
@@ -34,7 +34,7 @@ $form_data = [
                     image: {
                         accept: 'The file must be an image (jpg, jpeg or png)'
                     }
-                } 
+                }
             });
         });
 </script>
