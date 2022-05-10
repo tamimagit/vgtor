@@ -26,6 +26,12 @@
 				</li>
 			@endif
 
+            @if(Permission::has_permission(Auth::guard('admin')->user()->id, 'manage_banners'))
+                <li class="{{ (Route::current()->uri() == 'admin/settings/mobile-banking') ? 'active' : ''  }}">
+                    <a href="{{ url('admin/settings/mobile-banking') }}" data-group="profile">Mobile Banking</a>
+                </li>
+            @endif
+
 			@if(Helpers::has_permission(Auth::guard('admin')->user()->id, 'starting_cities_settings'))
 				<li class="{{ (Route::current()->uri() == 'admin/settings/starting-cities') || (Route::current()->uri() == 'admin/settings/add-starting_cities') || (Route::current()->uri() == 'admin/settings/edit-starting-cities/{id}') ? 'active' : ''  }}">
 					<a href="{{ url('admin/settings/starting-cities') }}" data-group="home_cities">Starting Cities</a>
