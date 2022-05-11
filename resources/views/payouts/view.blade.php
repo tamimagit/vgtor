@@ -172,7 +172,7 @@
                                 <select class="form-control" name="payout_type" id="payout_type">
                                     <option value="4">Bank</option>
                                     <option value="1">Paypal</option>
-                                    <option value="5">Mobile</option>
+                                    <option value="5">Mobile Banking</option>
                                 </select>
                             </div>
                         </div>

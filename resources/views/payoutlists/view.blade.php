@@ -33,6 +33,7 @@
 							</nav>
 						</div>
 					</div>
+
 					@if(Session::has('message'))
 						<div class="row justify-content-center mt-5 mb-5 pr-4 pl-4">
 							<div class="col-md-12  alert {{ Session::get('alert-class') }} alert-dismissable fade in top-message-text opacity-1">
@@ -62,7 +63,6 @@
 
 										<div class="text-right pl-3 pr-3">
 											<button type="submit" name="btn" class="btn vbtn-outline-success text-14 font-weight-700 pl-4 pr-4 pt-3 pb-3 mr-2">{{trans('messages.filter.filter')}}</button>
-
 										</div>
 									</div>
 
@@ -78,9 +78,7 @@
 											<i class="fa fa-arrow-up"></i>
 										</button>
 										@endif
-
 									</div>
-
 								</div>
 							</form>
 						</div>
@@ -124,7 +122,16 @@
 									<label for="exampleInputPassword1" class="control-label">{{trans('messages.utility.payment_method')}}</label>
 									<select class="form-control text-14" name="payment_method_id" id="payment_method_id">
 										@foreach($payouts as $payout)
-										<option value="{{$payout->id}}">@if( $payout->type == 1) Paypal ({{$payout->email}}) @else Bank ({{$payout->account_number}}) @endif </option>
+										<option value="{{$payout->id}}">
+                                            @if($payout->type == 1)
+                                                Paypal ({{$payout->email}})
+                                            @elseif($payout->type == 4)
+                                                Bank ({{$payout->account_number}})
+                                            @elseif($payout->type == 5)
+                                                @php($mobileBanking = mobileBanking($payout->mobile_banking_id))
+                                                Mobile Banking ({{$mobileBanking->name . ' - ' . $payout->mobile_banking_number}})
+                                            @endif
+                                        </option>
 										@endforeach
 									</select>
 								</div>
@@ -175,7 +182,6 @@
 
 <script type="text/javascript" src="{{ asset('public/js/jquery.dataTables.min.js') }}"></script>
 <script type="text/javascript" src="{{ asset('public/js/dataTables.responsive.min.js') }}"></script>
-
 <script type="text/javascript" src="{{ url('public/js/moment.min.js') }}"></script>
 <script type="text/javascript" src="{{ url('public/js/daterangepicker.min.js')}}"></script>
 {!! $dataTable->scripts() !!}
@@ -190,7 +196,6 @@
 		formDate (startDate, endDate);
 	});
 </script>
-
 <script type="text/javascript">
 	$('.no-payout').on('click', function(event) {
 		event.preventDefault();
