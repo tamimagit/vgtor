@@ -66,7 +66,7 @@ class PaymentController extends Controller
         $data['stripe_status'] = Settings::getAll()->where('name', 'stripe_status')
             ->where('type', 'Stripe')->first();
         $data['banks'] = Bank::getAll()->where('status', 'Active')->count();
-        $data['mobiles'] = MobileBanking::where('status', 'Active')->get();
+        $data['mobiles'] = MobileBanking::where('status', 'Active')->count();
         if ($request->isMethod('post')) {
             Session::put('payment_property_id', $request->id);
             Session::put('payment_checkin', $request->checkin);
