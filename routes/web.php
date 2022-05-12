@@ -380,6 +380,7 @@ Route::group(['middleware' => ['guest:users', 'locale']], function () {
     Route::get('payments/stripe', 'PaymentController@stripePayment');
     Route::post('payments/stripe-request', 'PaymentController@stripeRequest');
     Route::match(['get', 'post'], 'payments/bank-payment', 'PaymentController@bankPayment');
+    Route::match(['get', 'post'], 'payments/mobile-payment', 'PaymentController@mobilePayment');
     Route::get('booking/{id}', 'BookingController@index')->where('id', '[0-9]+');
     Route::get('booking_payment/{id}', 'BookingController@requestPayment')->where('id', '[0-9]+');
     Route::get('booking/requested', 'BookingController@requested');
