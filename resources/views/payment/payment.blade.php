@@ -66,6 +66,7 @@
                                         </option>
                                     @endif
 
+                                    {{--bank method--}}
                                     @if($banks >= 1)
                                         <option value="bank" data-payment-type="payment-method" data-cc-type="bank"
                                                 data-cc-name="" data-cc-expire="">
@@ -73,6 +74,7 @@
                                         </option>
                                     @endif
 
+                                    {{--mobile method--}}
                                     @if($mobiles >= 1)
                                         <option value="mobile" data-payment-type="payment-method" data-cc-type="mobile"
                                                 data-cc-name="" data-cc-expire=""> Mobile

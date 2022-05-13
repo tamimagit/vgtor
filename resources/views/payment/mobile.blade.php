@@ -4,7 +4,7 @@
     <div class="container-fluid container-fluid-90 margin-top-85 min-height">
         <div class="row">
             <div class="col-md-8 col-sm-8 col-xs-12 mb-5 main-panel p-5 border rounded">
-                <div class="pb-3 m-0 text-24 font-weight-700">{{trans('messages.payment.bank_pay')}}</div>
+                <div class="pb-3 m-0 text-24 font-weight-700">Mobile Banking Payment</div>
                 <form action="{{URL::to('payments/mobile-payment')}}" method="post" id="payment-form"
                       enctype="multipart/form-data">
                     {{ csrf_field() }}
@@ -22,16 +22,6 @@
                             <label for="message">{{trans('messages.payment.bank_select')}}</label>
                         </div>
 
-                        {{--<div class="col-sm-12 p-0 pb-3">
-                            <select id="bank-select" required name="bank" class="form-control mb20">
-                                @foreach($banks as $bank)
-                                    <option value="{{ $bank->id }}" @if($loop->first) selected @endif>
-                                        {{ $bank->iban }}
-                                    </option>
-                                @endforeach
-                            </select>
-                        </div>--}}
-
                         <div class="col-sm-12 p-0 pb-3">
                             <select id="bank-select" required name="mobile" class="form-control mb20">
                                 @foreach($mobiles as $mobile)
@@ -44,16 +34,16 @@
 
                         <div class="col-sm-12 p-3 my-2 border-ddd border-r-10">
                             <table class="table table-borderless">
-
                                 <tr>
-                                    <td>Enter your transaction number<span
-                                            class="danger-text">*</span>:
-                                    </td>
+                                    <td>Enter transaction number<span class="danger-text">*</span>:</td>
                                 </tr>
                                 <tbody>
                                 <tr>
-                                    <td><textarea class="form-control" required name="note"
-                                                  type="text">{{old('note')}}</textarea>
+                                    <td>
+                                        <textarea
+                                            class="form-control"
+                                            required name="note"
+                                            type="text">{{old('note')}}</textarea>
                                         <span class="text-danger">{{ $errors->first('note') }}</span>
                                     </td>
                                 </tr>
@@ -81,7 +71,6 @@
                     <div class="card-body p-2">
                         <a href="{{ url('/') }}/properties/{{$result->slug}}"><p
                                 class="text-16 font-weight-700 mb-0">{{ $result->name }}</p></a>
-
                         <p class="text-14 mt-2 text-muted mb-0">
                             <i class="fas fa-map-marker-alt"></i>
                             {{$result->property_address->address_line_1}}, {{ $result->property_address->state }}
@@ -100,7 +89,6 @@
                         </div>
 
                         <div class="border p-4 mt-3">
-
                             @foreach( $price_list->date_with_price as $date_price)
                                 <div class="d-flex justify-content-between text-16">
                                     <div>

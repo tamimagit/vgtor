@@ -28,7 +28,7 @@ use DateTime;
 
 class Bookings extends Model
 {
-      protected $table = 'bookings';
+    protected $table = 'bookings';
 
     protected $appends = ['host_payout', 'label_color', 'date_range', 'expiration_time'];
 
@@ -82,10 +82,15 @@ class Bookings extends Model
         return $this->belongsTo('App\Models\Currency', 'currency_code', 'code');
     }
 
-    public function bank() {
+    public function bank()
+    {
         return $this->belongsTo('App\Models\Bank');
     }
 
+    public function mobile()
+    {
+        return $this->belongsTo('App\Models\MobileBanking');
+    }
 
     public function getHostPenaltyAmountAttribute()
     {
@@ -116,7 +121,7 @@ class Bookings extends Model
         if (isset($payout->original_amount)) {
             return $payout->original_amount;
         } else {
-            return $this->attributes['total'] - $this->attributes['service_charge'] ;
+            return $this->attributes['total'] - $this->attributes['service_charge'];
         }
     }
 
@@ -146,13 +151,13 @@ class Bookings extends Model
     public function currency_adjust($field)
     {
         $default_currency = Currency::getAll()->where('default', 1)->first()->code;
-        $rate = Currency::getAll()->where('code', $this->attributes['currency_code'] ??  $default_currency)->first()->rate;
+        $rate = Currency::getAll()->where('code', $this->attributes['currency_code'] ?? $default_currency)->first()->rate;
 
 
         $base_amount = $this->attributes[$field] / $rate;
 
 
-        $session_rate = Currency::getAll()->where('code',$default_currency)->first()->rate;
+        $session_rate = Currency::getAll()->where('code', $default_currency)->first()->rate;
 
         return round($base_amount * $session_rate, 2);
     }
@@ -169,8 +174,8 @@ class Bookings extends Model
 
     public function getCheckinCrossAttribute()
     {
-        $date1=date_create($this->attributes['start_date']);
-        $date2=date_create(date('Y-m-d'));
+        $date1 = date_create($this->attributes['start_date']);
+        $date2 = date_create(date('Y-m-d'));
         if ($date2 < $date1) {
             return 1;
         } else {
@@ -180,15 +185,14 @@ class Bookings extends Model
 
     public function getCheckoutCrossAttribute()
     {
-        $date1=date_create($this->attributes['end_date']);
-        $date2=date_create(date('Y-m-d'));
+        $date1 = date_create($this->attributes['end_date']);
+        $date2 = date_create(date('Y-m-d'));
         if ($date2 < $date1) {
             return 0;
         } else {
             return 1;
         }
     }
-
 
     public function getOriginalPerNightAttribute()
     {
@@ -248,6 +252,7 @@ class Bookings extends Model
     {
         return $this->attributes['total'];
     }
+
     public function getPerNightAttribute()
     {
         return $this->currency_adjust('per_night');
@@ -317,7 +322,7 @@ class Bookings extends Model
             return 'info';
         } elseif ($this->attributes['status'] == 'processing') {
             return 'secondary';
-        }elseif ($this->attributes['status'] == '') {
+        } elseif ($this->attributes['status'] == '') {
             return 'inquiry';
         }
 
@@ -334,7 +339,7 @@ class Bookings extends Model
     public function getGuestAccountAttribute()
     {
         $payout = Accounts::where('user_id', $this->attributes['user_id'])->where('selected', 'yes')->first();
-      return (isset($payout->account) ? $payout->account : '');
+        return (isset($payout->account) ? $payout->account : '');
     }
 
     public function getCheckHostPayoutAttribute()
@@ -428,72 +433,69 @@ class Bookings extends Model
         return round($base_amount * $session_rate);
     }
 
-
     public function getStartdateDmyAttribute()
     {
-        $start_date =  date('D, F d, Y', strtotime($this->attributes['start_date']));
+        $start_date = date('D, F d, Y', strtotime($this->attributes['start_date']));
         return $start_date;
     }
 
-
     public function getEnddateDmyAttribute()
     {
-        $end_date =  date('D, F d, Y', strtotime($this->attributes['end_date']));
+        $end_date = date('D, F d, Y', strtotime($this->attributes['end_date']));
         return $end_date;
     }
 
     public function getStartdateMdAttribute()
     {
-        $start_date =  date('M d', strtotime($this->attributes['start_date']));
+        $start_date = date('M d', strtotime($this->attributes['start_date']));
         return $start_date;
     }
 
-
     public function getEnddateMdAttribute()
     {
-        $end_date =  date('M d', strtotime($this->attributes['end_date']));
+        $end_date = date('M d', strtotime($this->attributes['end_date']));
         return $end_date;
     }
 
     public function getDateRangeAttribute()
     {
-        return date('M d', strtotime($this->attributes['start_date'])).' - '.date('d, Y', strtotime($this->attributes['end_date']));
+        return date('M d', strtotime($this->attributes['start_date'])) . ' - ' . date('d, Y', strtotime($this->attributes['end_date']));
     }
 
     public function getExpirationTimeAttribute()
     {
-        $expired_at =  date('Y/m/d H:i:s', strtotime(str_replace('-', '/', $this->attributes['created_at']).' +1 day'));
+        $expired_at = date('Y/m/d H:i:s', strtotime(str_replace('-', '/', $this->attributes['created_at']) . ' +1 day'));
         return $expired_at;
     }
 
     public function getBookingLists()
     {
         $bookings = Bookings::join('properties', function ($join) {
-                                $join->on('properties.id', '=', 'bookings.property_id');
+            $join->on('properties.id', '=', 'bookings.property_id');
         })
-                        ->join('users', function ($join) {
-                                $join->on('users.id', '=', 'bookings.user_id');
-                        })
-                        ->join('currency', 'currency.code', '=', 'bookings.currency_code')
-                        ->leftJoin('users as u', function ($join) {
-                                $join->on('u.id', '=', 'bookings.host_id');
-                        })
-                        ->select(['bookings.id as id', 'u.first_name as host_name', 'users.first_name as guest_name', 'bookings.property_id as property_id', 'properties.name as property_name', \DB::raw('CONCAT(bookings.total) AS total_amount'), 'bookings.status', 'bookings.created_at as created_at', 'bookings.updated_at as updated_at', 'bookings.start_date', 'bookings.end_date', 'bookings.guest', 'bookings.host_id', 'bookings.user_id', 'bookings.total', 'bookings.currency_code', 'currency.symbol', 'bookings.service_charge', 'bookings.host_fee'])
-                        ->take(5)
-                        ->get();
+            ->join('users', function ($join) {
+                $join->on('users.id', '=', 'bookings.user_id');
+            })
+            ->join('currency', 'currency.code', '=', 'bookings.currency_code')
+            ->leftJoin('users as u', function ($join) {
+                $join->on('u.id', '=', 'bookings.host_id');
+            })
+            ->select(['bookings.id as id', 'u.first_name as host_name', 'users.first_name as guest_name', 'bookings.property_id as property_id', 'properties.name as property_name', \DB::raw('CONCAT(bookings.total) AS total_amount'), 'bookings.status', 'bookings.created_at as created_at', 'bookings.updated_at as updated_at', 'bookings.start_date', 'bookings.end_date', 'bookings.guest', 'bookings.host_id', 'bookings.user_id', 'bookings.total', 'bookings.currency_code', 'currency.symbol', 'bookings.service_charge', 'bookings.host_fee'])
+            ->take(5)
+            ->get();
         return $bookings;
     }
 
     public function getReviewDaysAttribute()
     {
         $start_date = $this->attributes['end_date'];
-        $end_date = date('Y-m-d', strtotime($this->attributes['end_date'].' +14 days'));
+        $end_date = date('Y-m-d', strtotime($this->attributes['end_date'] . ' +14 days'));
 
         $datetime1 = new DateTime(date('Y-m-d'));
         $datetime2 = new DateTime($end_date);
         $interval = $datetime1->diff($datetime2);
         $days = $interval->format('%R%a');
-        return $days+1;
+        return $days + 1;
     }
 
     public function review_user($id)
@@ -512,10 +514,11 @@ class Bookings extends Model
         return Reviews::find($id);
     }
 
-    public function getAttachmentAttribute() {
-        if(! $this->attributes['attachment']) {
+    public function getAttachmentAttribute()
+    {
+        if (!$this->attributes['attachment']) {
             return null;
         }
-        return url('/public/uploads/booking/'. $this->attributes['attachment']);
+        return url('/public/uploads/booking/' . $this->attributes['attachment']);
     }
 }

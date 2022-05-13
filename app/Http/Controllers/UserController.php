@@ -5,21 +5,14 @@ namespace App\Http\Controllers;
 use Illuminate\Http\Request;
 use App\Http\Helpers\Common;
 use Illuminate\Support\Facades\Route;
-
-
 use App\Http\Requests;
 use App\Http\Controllers\Controller;
 use App\Http\Controllers\EmailController;
 use Facebook\Exceptions\FacebookResponseException;
 use Facebook\Exceptions\FacebookSDKException;
 use Illuminate\Support\Facades\Cache;
-
-
 use App\DataTables\TransactionDataTable;
-
-
 use Auth, Validator, Socialite, Mail, DateTime, Hash, Excel, DB, Image, Session;
-
 use App\Models\{
     User,
     UserDetails,
@@ -41,9 +34,6 @@ use App\Models\{
     Withdrawal
 };
 
-
-
-
 class UserController extends Controller
 {
     protected $helper;
@@ -56,28 +46,28 @@ class UserController extends Controller
     public function create(Request $request, EmailController $email_controller)
     {
         $rules = array(
-            'first_name'      => 'required|max:255',
-            'last_name'       => 'required|max:255',
-            'email'           => 'required|max:255|email|unique:users',
-            'password'        => 'required|min:6',
-            'date_of_birth'   => 'check_age',
-            'birthday_day'    => 'required',
-            'birthday_month'  => 'required',
-            'birthday_year'   => 'required',
+            'first_name' => 'required|max:255',
+            'last_name' => 'required|max:255',
+            'email' => 'required|max:255|email|unique:users',
+            'password' => 'required|min:6',
+            'date_of_birth' => 'check_age',
+            'birthday_day' => 'required',
+            'birthday_month' => 'required',
+            'birthday_year' => 'required',
         );
 
         $messages = array(
-            'required'                => ':attribute is required.',
-            'birthday_day.required'   => 'Birth date field is required.',
+            'required' => ':attribute is required.',
+            'birthday_day.required' => 'Birth date field is required.',
             'birthday_month.required' => 'Birth date field is required.',
-            'birthday_year.required'  => 'Birth date field is required.',
+            'birthday_year.required' => 'Birth date field is required.',
         );
 
         $fieldNames = array(
-            'first_name'      => 'First name',
-            'last_name'       => 'Last name',
-            'email'           => 'Email',
-            'password'        => 'Password',
+            'first_name' => 'First name',
+            'last_name' => 'Last name',
+            'email' => 'Email',
+            'password' => 'Password',
         );
 
         $validator = Validator::make($request->all(), $rules, $messages);
@@ -87,26 +77,26 @@ class UserController extends Controller
             return back()->withErrors($validator)->withInput();
         } else {
             $user = new User;
-            $user->first_name   =   strip_tags($request->first_name);
-            $user->last_name    =   strip_tags($request->last_name);
-            $user->email        =   $request->email;
-            $user->password     =   bcrypt($request->password);
-            $user->status       =   'Active';
-            $formattedPhone        = str_replace('+' . $request->carrier_code, "", $request->formatted_phone);
-            $user->phone           = !empty($request->phone) ? preg_replace("/[\s-]+/", "", $formattedPhone) : NULL;
+            $user->first_name = strip_tags($request->first_name);
+            $user->last_name = strip_tags($request->last_name);
+            $user->email = $request->email;
+            $user->password = bcrypt($request->password);
+            $user->status = 'Active';
+            $formattedPhone = str_replace('+' . $request->carrier_code, "", $request->formatted_phone);
+            $user->phone = !empty($request->phone) ? preg_replace("/[\s-]+/", "", $formattedPhone) : NULL;
             $user->default_country = isset($request->default_country) ? $request->default_country : NULL;
-            $user->carrier_code    = isset($request->carrier_code) ? $request->carrier_code : NULL;
+            $user->carrier_code = isset($request->carrier_code) ? $request->carrier_code : NULL;
             $user->formatted_phone = isset($request->formatted_phone) ? $request->formatted_phone : NULL;
             $user->save();
 
-            $user_details             = new UserDetails;
-            $user_details->user_id    = $user->id;
-            $user_details->field      = 'date_of_birth';
-            $user_details->value      = $request->birthday_year.'-'.$request->birthday_month.'-'.$request->birthday_day;
+            $user_details = new UserDetails;
+            $user_details->user_id = $user->id;
+            $user_details->field = 'date_of_birth';
+            $user_details->value = $request->birthday_year . '-' . $request->birthday_month . '-' . $request->birthday_day;
             $user_details->save();
 
-            $user_verification  = new UsersVerification;
-            $user_verification->user_id  =   $user->id;
+            $user_verification = new UsersVerification;
+            $user_verification->user_id = $user->id;
             $user_verification->save();
 
             $this->wallet($user->id);
@@ -121,7 +111,6 @@ class UserController extends Controller
             }
         }
     }
-
 
     public function dashboard()
     {
@@ -138,7 +127,7 @@ class UserController extends Controller
         $trips = Bookings::select('payment_method_id', 'currency_code', 'total', 'created_at', DB::raw('-1 as type'))
             ->where(['user_id' => $user_id, 'status' => 'Accepted']);
 
-        $data['transactions'] = Withdrawal::with('payment_methods','currency')
+        $data['transactions'] = Withdrawal::with('payment_methods', 'currency')
             ->select('payment_method_id', 'currency_id', 'amount', 'created_at', DB::raw('0 as type'))
             ->where(['user_id' => $user_id, 'status' => 'Success'])->union($bookings)->union($trips)
             ->orderBy('created_at', 'desc')->take(9)->get();
@@ -147,8 +136,8 @@ class UserController extends Controller
             ->where(['host_id' => $user_id, 'status' => 'Accepted'])
             ->orderBy('id', 'desc')->take(5)->get();
         $data['currentCurrency'] = $this->helper->getCurrentCurrency();
-        return view('users.dashboard', $data);
 
+        return view('users.dashboard', $data);
     }
 
     public function profile(Request $request, EmailController $email_controller)
@@ -158,26 +147,26 @@ class UserController extends Controller
 
         if ($request->isMethod('post')) {
             $rules = array(
-                'first_name'      => 'required|max:255',
-                'last_name'       => 'required|max:255',
-                'email'           => 'required|max:255|email|unique:users,email,'.Auth::user()->id,
-                'birthday_day'    => 'required',
-                'birthday_month'  => 'required',
-                'birthday_year'   => 'required',
-                'phone'           => 'required',
+                'first_name' => 'required|max:255',
+                'last_name' => 'required|max:255',
+                'email' => 'required|max:255|email|unique:users,email,' . Auth::user()->id,
+                'birthday_day' => 'required',
+                'birthday_month' => 'required',
+                'birthday_year' => 'required',
+                'phone' => 'required',
             );
 
             $messages = array(
-                'required'                => ':attribute is required.',
-                'birthday_day.required'   => 'Birth date field is required.',
+                'required' => ':attribute is required.',
+                'birthday_day.required' => 'Birth date field is required.',
                 'birthday_month.required' => 'Birth date field is required.',
-                'birthday_year.required'  => 'Birth date field is required.',
+                'birthday_year.required' => 'Birth date field is required.',
             );
 
             $fieldNames = array(
-                'first_name'      => 'First name',
-                'last_name'       => 'Last name',
-                'email'           => 'Email',
+                'first_name' => 'First name',
+                'last_name' => 'Last name',
+                'email' => 'Email',
             );
 
             $validator = Validator::make($request->all(), $rules, $messages);
@@ -188,13 +177,13 @@ class UserController extends Controller
             } else {
                 $new_email = ($user->email != $request->email) ? 'yes' : 'no';
 
-                $user->first_name      = $request->first_name;
-                $user->last_name       = $request->last_name;
-                $user->email           = $request->email;
-                $formattedPhone        = str_replace('+' . $request->carrier_code, "", $request->formatted_phone);
-                $user->phone           = !empty($request->phone) ? preg_replace("/[\s-]+/", "", $formattedPhone) : NULL;
+                $user->first_name = $request->first_name;
+                $user->last_name = $request->last_name;
+                $user->email = $request->email;
+                $formattedPhone = str_replace('+' . $request->carrier_code, "", $request->formatted_phone);
+                $user->phone = !empty($request->phone) ? preg_replace("/[\s-]+/", "", $formattedPhone) : NULL;
                 $user->default_country = isset($request->default_country) ? $request->default_country : NULL;
-                $user->carrier_code    = isset($request->carrier_code) ? $request->carrier_code : NULL;
+                $user->carrier_code = isset($request->carrier_code) ? $request->carrier_code : NULL;
                 $user->formatted_phone = isset($request->formatted_phone) ? $request->formatted_phone : NULL;
                 $user->save();
 
@@ -203,7 +192,7 @@ class UserController extends Controller
                 $user_verification->save();
 
                 $temp_details = $request->details;
-                $temp_details['date_of_birth'] = $request->birthday_year.'-'.$request->birthday_month.'-'.$request->birthday_day;
+                $temp_details['date_of_birth'] = $request->birthday_year . '-' . $request->birthday_month . '-' . $request->birthday_day;
                 foreach ($temp_details as $key => $value) {
                     if (!is_null($value) && $value != '') {
                         UserDetails::updateOrCreate(['user_id' => Auth::user()->id, 'field' => $key], ['value' => $value]);
@@ -220,18 +209,18 @@ class UserController extends Controller
             }
         }
 
-        $data['profile']   = User::find(Auth::user()->id);
+        $data['profile'] = User::find(Auth::user()->id);
 
         $data['timezone'] = Cache::remember('timezone', 86400, function () {
             return Timezone::get()->pluck('zone', 'value');
-            });
+        });
 
         $data['country'] = Cache::remember('country', 86400, function () {
             return Country::get()->pluck('name', 'short_name');
-            });
+        });
 
 
-        $data['details']   = $details = UserDetails::where('user_id', Auth::user()->id)->pluck('value', 'field')->toArray();
+        $data['details'] = $details = UserDetails::where('user_id', Auth::user()->id)->pluck('value', 'field')->toArray();
 
         if (isset($details['date_of_birth'])) {
             $data['date_of_birth'] = explode('-', $details['date_of_birth']);
@@ -248,22 +237,22 @@ class UserController extends Controller
 
         if (isset($_FILES["photos"]["name"])) {
             foreach ($_FILES["photos"]["error"] as $key => $error) {
-                $tmp_name     = $_FILES["photos"]["tmp_name"][$key];
-                $name         = str_replace(' ', '_', $_FILES["photos"]["name"][$key]);
-                $ext          = pathinfo($name, PATHINFO_EXTENSION);
-                $name         = 'profile_'.time().'.'.$ext;
-                $path         = 'public/images/profile/'.Auth::user()->id;
-                $oldImagePath =  public_path('images/profile').'/'.Auth::user()->id.'/'.$data['result']->profile_image;
+                $tmp_name = $_FILES["photos"]["tmp_name"][$key];
+                $name = str_replace(' ', '_', $_FILES["photos"]["name"][$key]);
+                $ext = pathinfo($name, PATHINFO_EXTENSION);
+                $name = 'profile_' . time() . '.' . $ext;
+                $path = 'public/images/profile/' . Auth::user()->id;
+                $oldImagePath = public_path('images/profile') . '/' . Auth::user()->id . '/' . $data['result']->profile_image;
                 if (!file_exists($path)) {
                     mkdir($path, 0777, true);
                 }
 
                 if ($ext == 'png' || $ext == 'jpg' || $ext == 'jpeg' || $ext == 'gif') {
-                    if(!empty($user->profile_image) && file_exists($oldImagePath)) {
+                    if (!empty($user->profile_image) && file_exists($oldImagePath)) {
                         unlink($oldImagePath);
                     }
-                    if (move_uploaded_file($tmp_name, $path."/".$name)) {
-                        $user->profile_image  = $name;
+                    if (move_uploaded_file($tmp_name, $path . "/" . $name)) {
+                        $user->profile_image = $name;
                         $user->save();
                         $this->helper->one_time_message('success', trans('messages.users_media.uploaded'));
                     }
@@ -274,28 +263,27 @@ class UserController extends Controller
         return view('users.media', $data);
     }
 
-
     public function accountPreferences(Request $request, EmailController $email_controller)
     {
         $data['currency_code'] = Currency::where('default', 1)->first();
         $currency_code = $data['currency_code']->code;
 
         if (!$request->isMethod('post')) {
-            $data['payouts']   = Accounts::where('user_id', Auth::user()->id)->orderBy('id', 'desc')->get();
-            $data['country']   = Country::all()->pluck('name', 'short_name');
+            $data['payouts'] = Accounts::where('user_id', Auth::user()->id)->orderBy('id', 'desc')->get();
+            $data['country'] = Country::all()->pluck('name', 'short_name');
             return view('account.preferences', $data);
         } else {
-            $account                    =   new Accounts;
-            $account->user_id           = Auth::user()->id;
-            $account->address1          = $request->address1;
-            $account->address2          = $request->address2;
-            $account->city              = $request->city;
-            $account->state             = $request->state;
-            $account->postal_code       = $request->postal_code;
-            $account->country           = $request->country;
+            $account = new Accounts;
+            $account->user_id = Auth::user()->id;
+            $account->address1 = $request->address1;
+            $account->address2 = $request->address2;
+            $account->city = $request->city;
+            $account->state = $request->state;
+            $account->postal_code = $request->postal_code;
+            $account->country = $request->country;
             $account->payment_method_id = $request->payout_method;
-            $account->account           = $request->account;
-            $account->currency_code     = $currency_code;
+            $account->account = $request->account;
+            $account->currency_code = $currency_code;
 
             $account->save();
 
@@ -309,7 +297,7 @@ class UserController extends Controller
             $updateTime = dateFormat($account->updated_at);
 
 
-            $email_controller->account_preferences($account->id,$type = "update", $updateTime);
+            $email_controller->account_preferences($account->id, $type = "update", $updateTime);
 
             $this->helper->one_time_message('success', trans('messages.success.payout_update_success'));
             return redirect('users/account-preferences');
@@ -339,18 +327,16 @@ class UserController extends Controller
         $account = Accounts::find($request->id);
 
 
-
-
         if ($account->selected == 'Yes') {
             $this->helper->one_time_message('success', trans('messages.error.payout_account_error'));
             return redirect('users/account-preferences');
         } else {
-            $account_all       = Accounts::where('user_id', \Auth::user()->id)->update(['selected'=>'No']);
+            $account_all = Accounts::where('user_id', \Auth::user()->id)->update(['selected' => 'No']);
             $account->selected = 'Yes';
             $account->save();
             $updateTime = dateFormat($account->updated_at);
 
-            $email_controller->account_preferences($account->id, 'default_update', $updateTime );
+            $email_controller->account_preferences($account->id, 'default_update', $updateTime);
 
             $this->helper->one_time_message('success', trans('messages.success.default_payout_success'));
             return redirect('users/account-preferences');
@@ -361,14 +347,14 @@ class UserController extends Controller
     {
         if ($request->isMethod('post')) {
             $rules = array(
-                'old_password'          => 'required',
-                'new_password'          => 'required|min:6|max:30|different:old_password',
+                'old_password' => 'required',
+                'new_password' => 'required|min:6|max:30|different:old_password',
                 'password_confirmation' => 'required|same:new_password|different:old_password'
             );
 
             $fieldNames = array(
-                'old_password'          => 'Old Password',
-                'new_password'          => 'New Password',
+                'old_password' => 'Old Password',
+                'new_password' => 'New Password',
                 'password_confirmation' => 'Confirm Password'
             );
 
@@ -400,12 +386,12 @@ class UserController extends Controller
         $data['result'] = User::findOrFail($request->id);
         $data['details'] = UserDetails::where('user_id', $request->id)->pluck('value', 'field')->toArray();
 
-        $data['reviews_from_guests'] = Reviews::with('users', 'properties')->where(['receiver_id'=>$request->id, 'reviewer'=>'guest'])->orderBy('id', 'desc')->get();
-        $data['reviews_from_hosts'] = Reviews::with('users', 'properties')->where(['receiver_id'=>$request->id, 'reviewer'=>'host'])->orderBy('id', 'desc')->get();
+        $data['reviews_from_guests'] = Reviews::with('users', 'properties')->where(['receiver_id' => $request->id, 'reviewer' => 'guest'])->orderBy('id', 'desc')->get();
+        $data['reviews_from_hosts'] = Reviews::with('users', 'properties')->where(['receiver_id' => $request->id, 'reviewer' => 'host'])->orderBy('id', 'desc')->get();
 
         $data['reviews_count'] = $data['reviews_from_guests']->count() + $data['reviews_from_hosts']->count();
 
-        $data['title'] = $data['result']->first_name."'s Profile ";
+        $data['title'] = $data['result']->first_name . "'s Profile ";
 
         return view('users.show', $data);
     }
@@ -414,15 +400,15 @@ class UserController extends Controller
     {
 
         $data['from'] = isset(request()->from) ? request()->from : null;
-        $data['to']   = isset(request()->to) ? request()->to : null;
+        $data['to'] = isset(request()->to) ? request()->to : null;
 
-        $data['title']  = 'Transaction History';
-        return $dataTable->render('account.transaction_history',$data);
+        $data['title'] = 'Transaction History';
+        return $dataTable->render('account.transaction_history', $data);
     }
 
     public function getCompletedTransaction(Request $request)
     {
-        $transaction        = $this->transaction_result();
+        $transaction = $this->transaction_result();
 
         if ($request->from) {
 
@@ -440,22 +426,21 @@ class UserController extends Controller
 
     public function transaction_result()
     {
-        $where['user_id']   = Auth::user()->id;
+        $where['user_id'] = Auth::user()->id;
 
-        $transaction        = Payouts::join('properties', function ($join) {
+        $transaction = Payouts::join('properties', function ($join) {
             $join->on('properties.id', '=', 'payouts.property_id');
         })
-        ->select('payouts.*', 'properties.name as property_name')
-        ->where($where)
-        ->orderBy('updated_at', 'DESC');
+            ->select('payouts.*', 'properties.name as property_name')
+            ->where($where)
+            ->orderBy('updated_at', 'DESC');
 
         return $transaction;
     }
 
-
     public function verification(Request $request)
     {
-        $data          = [];
+        $data = [];
         $data['title'] = 'Verify your account';
         return view('users.verification', $data);
     }
@@ -468,15 +453,15 @@ class UserController extends Controller
             $password_result = $password_resets->first();
             $datetime1 = new DateTime();
             $datetime2 = new DateTime($password_result->created_at);
-            $interval  = $datetime1->diff($datetime2);
-            $hours     = $interval->format('%h');
+            $interval = $datetime1->diff($datetime2);
+            $hours = $interval->format('%h');
             if ($hours >= 1) {
                 $password_resets->delete();
                 $this->helper->one_time_message('success', trans('messages.login.token_expired'));
                 return redirect('login');
             }
             $data['result'] = User::whereEmail($password_result->email)->first();
-            $data['token']  = $request->code;
+            $data['token'] = $request->code;
             $user = User::find($data['result']->id);
             $user->status = "Active";
             $user->save();
@@ -493,13 +478,14 @@ class UserController extends Controller
             return redirect('dashboard');
         }
     }
+
     public function newConfirmEmail(Request $request, EmailController $emailController)
     {
         $userInfo = User::find(Auth::user()->id);
 
         $emailController->new_email_confirmation($userInfo);
 
-        $this->helper->one_time_message('success', trans('messages.profile.new_confirm_link_sent', ['email'=>$userInfo->email]));
+        $this->helper->one_time_message('success', trans('messages.profile.new_confirm_link_sent', ['email' => $userInfo->email]));
         if ($request->redirect == 'verification') {
             return redirect('users/edit-verification');
         } else {
@@ -521,7 +507,7 @@ class UserController extends Controller
         $verification->facebook = 'yes';
         $verification->fb_id = $facebook_id;
         $verification->save();
-        $this->helper->one_time_message('success', trans('messages.profile.connected_successfully', ['social'=>'Facebook']));
+        $this->helper->one_time_message('success', trans('messages.profile.connected_successfully', ['social' => 'Facebook']));
         return redirect('users/edit_verification');
     }
 
@@ -531,7 +517,7 @@ class UserController extends Controller
         $verification->facebook = 'no';
         $verification->fb_id = '';
         $verification->save();
-        $this->helper->one_time_message('success', trans('messages.profile.disconnected_successfully', ['social'=>'Facebook']));
+        $this->helper->one_time_message('success', trans('messages.profile.disconnected_successfully', ['social' => 'Facebook']));
         return redirect('users/edit_verification');
     }
 
@@ -552,7 +538,7 @@ class UserController extends Controller
 
         $verification->save();
 
-        $this->helper->one_time_message('success', trans('messages.profile.connected_successfully', ['social'=>'Google']));
+        $this->helper->one_time_message('success', trans('messages.profile.connected_successfully', ['social' => 'Google']));
         return redirect('users/edit-verification');
     }
 
@@ -565,28 +551,27 @@ class UserController extends Controller
 
         $verification->save();
 
-        $this->helper->one_time_message('success', trans('messages.profile.disconnected_successfully', ['social'=>'Google']));
+        $this->helper->one_time_message('success', trans('messages.profile.disconnected_successfully', ['social' => 'Google']));
         return redirect('users/edit-verification');
     }
-
 
     public function reviews(Request $request)
     {
         $data['title'] = "Reviews";
         $data['reviewsAboutYou'] = Reviews::where('receiver_id', Auth::user()->id)
-        ->orderBy('id', 'desc')
-        ->get();
+            ->orderBy('id', 'desc')
+            ->get();
         return view('users.reviews_tpl', $data);
     }
 
     public function reviewsByYou(Request $request)
     {
         $data['title'] = "Reviews";
-        $data['reviewsByYou'] = Reviews::with('properties','bookings')->where('sender_id', Auth::user()->id)
-                                ->orderBy('id', 'desc')
-                                ->paginate(Session::get('row_per_page'), ['*'], 'you');
+        $data['reviewsByYou'] = Reviews::with('properties', 'bookings')->where('sender_id', Auth::user()->id)
+            ->orderBy('id', 'desc')
+            ->paginate(Session::get('row_per_page'), ['*'], 'you');
 
-        $data['reviewsToWrite'] = Bookings::with('properties','host','users')->whereRaw('DATEDIFF(now(),end_date) <= 14')
+        $data['reviewsToWrite'] = Bookings::with('properties', 'host', 'users')->whereRaw('DATEDIFF(now(),end_date) <= 14')
             ->whereRaw('DATEDIFF(now(),end_date)>=1')
             ->where('status', 'Accepted')
             ->where(function ($query) {
@@ -600,7 +585,7 @@ class UserController extends Controller
 
         if ($request->expired) {
             $data['expired'] = 'active';
-        } elseif ($request->you){
+        } elseif ($request->you) {
             $data['you'] = 'active';
         } else {
             $data['write'] = 'active';
@@ -611,14 +596,14 @@ class UserController extends Controller
 
     public function editReviews(Request $request)
     {
-        $data['title']  = 'Update your reviews';
+        $data['title'] = 'Update your reviews';
         $data['result'] = $reservationDetails = Bookings::findOrFail($request->id);
 
         if (Auth::user()->id == $reservationDetails->user_id) {
-            $reviewsChecking = Reviews::where(['booking_id'=>$request->id, 'reviewer'=>'guest'])->get();
+            $reviewsChecking = Reviews::where(['booking_id' => $request->id, 'reviewer' => 'guest'])->get();
             $data['review_id'] = ($reviewsChecking->count()) ? $reviewsChecking[0]->id : '';
         } else {
-            $reviewsChecking = Reviews::where(['booking_id'=>$request->id, 'reviewer'=>'host'])->get();
+            $reviewsChecking = Reviews::where(['booking_id' => $request->id, 'reviewer' => 'host'])->get();
             $data['review_id'] = ($reviewsChecking->count()) ? $reviewsChecking[0]->id : '';
         }
 
@@ -631,7 +616,7 @@ class UserController extends Controller
                 return abort(404);
             }
         } else {
-            $data  = $request;
+            $data = $request;
             if ($data->review_id == '') {
                 $reviews = new Reviews;
             } else {
@@ -660,21 +645,19 @@ class UserController extends Controller
 
             $reviews->save();
 
-            return json_encode(['success'=>true, 'review_id'=>$reviews->id]);
+            return json_encode(['success' => true, 'review_id' => $reviews->id]);
         }
     }
-
 
     public function reviewDetails(Request $request)
     {
         $review_id = $request->id;
-        $data['reviewDetails'] = Reviews::where('id', '=', $review_id)->where(function($query){
+        $data['reviewDetails'] = Reviews::where('id', '=', $review_id)->where(function ($query) {
             return $query->where('sender_id', Auth::id())->orWhere('receiver_id', Auth::id());
             return $query;
         })->firstOrFail();
         return view('users.reviews_details', $data)->render();
     }
-
 
     /**
      * Check duplicate phone number for new user
@@ -685,14 +668,12 @@ class UserController extends Controller
      *
      * @return message fail/success
      */
-
     public function duplicatePhoneNumberCheck(Request $request)
     {
         $req_id = $request->id;
 
         if (isset($req_id)) {
-            $user = User::where(['phone' => preg_replace("/[\s-]+/", "", $request->phone), 'carrier_code' => $request->carrier_code])->where(function ($query) use ($req_id)
-            {
+            $user = User::where(['phone' => preg_replace("/[\s-]+/", "", $request->phone), 'carrier_code' => $request->carrier_code])->where(function ($query) use ($req_id) {
                 $query->where('id', '!=', $req_id);
             })->first(['phone', 'carrier_code']);
         } else {
@@ -701,9 +682,9 @@ class UserController extends Controller
 
         if (!empty($user->phone) && !empty($user->carrier_code)) {
             $data['status'] = true;
-            $data['fail']   = "The phone number has already been taken!";
+            $data['fail'] = "The phone number has already been taken!";
         } else {
-            $data['status']  = false;
+            $data['status'] = false;
             $data['success'] = "The phone number is Available!";
         }
         return json_encode($data);
@@ -716,15 +697,13 @@ class UserController extends Controller
      *
      * @return status and message
      */
-
     public function duplicatePhoneNumberCheckForExistingCustomer(Request $request)
     {
 
         $req_id = isset($request->id) ? $request->id : $request->customer_id;
 
         if (isset($req_id)) {
-            $user = User::where(['phone' => preg_replace("/[\s-]+/", "", $request->phone), 'carrier_code' => $request->carrier_code])->where(function ($query) use ($req_id)
-            {
+            $user = User::where(['phone' => preg_replace("/[\s-]+/", "", $request->phone), 'carrier_code' => $request->carrier_code])->where(function ($query) use ($req_id) {
                 $query->where('id', '!=', $req_id);
             })->first(['phone', 'carrier_code']);
         } else {
@@ -733,28 +712,28 @@ class UserController extends Controller
 
         if (!empty($user->phone) && !empty($user->carrier_code)) {
             $data['status'] = true;
-            $data['fail']   = "The phone number has already been taken!";
+            $data['fail'] = "The phone number has already been taken!";
         } else {
-            $data['status']  = false;
+            $data['status'] = false;
             $data['success'] = "The phone number is Available!";
         }
         return json_encode($data);
     }
-       /**
+
+    /**
      * Add for user wallet info
      *
      * @param string Request as $request
      *
      * @return  user info
      */
-       public function wallet($userId)
-       {
-           $defaultCurrencyId    = Settings::getAll()->where('name', 'default_currency')->first();
-           $wallet               = new Wallet();
-           $wallet->user_id      = $userId;
-           $wallet->currency_id  = (int)$defaultCurrencyId->value;
-           $wallet->save();
+    public function wallet($userId)
+    {
+        $defaultCurrencyId = Settings::getAll()->where('name', 'default_currency')->first();
+        $wallet = new Wallet();
+        $wallet->user_id = $userId;
+        $wallet->currency_id = (int)$defaultCurrencyId->value;
+        $wallet->save();
 
-       }
-   }
-
+    }
+}

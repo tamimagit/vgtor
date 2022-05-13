@@ -23,7 +23,8 @@ use App\Models\{Bank,
     PropertyFees,
     Settings,
     Currency,
-    Country};
+    Country
+};
 
 use Illuminate\Http\Request;
 
@@ -358,7 +359,6 @@ class BookingController extends Controller
      * User Booking Sort
      *
      */
-
     public function myBookings(Request $request)
     {
         switch ($request->status) {
