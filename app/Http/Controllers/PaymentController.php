@@ -399,8 +399,7 @@ class PaymentController extends Controller
 
 
         if (isset($booking_id) && !empty($booking_id)) {
-            dd('update');
-            $code = $this->update($data);
+            $code = $this->mobileUpdate($data);
         } else {
             $code = $this->mobileStore($data);
         }
@@ -556,6 +555,113 @@ class PaymentController extends Controller
         Session::forget('payment_checkout');
         Session::forget('payment_number_of_guests');
         Session::forget('payment_booking_type');
+
+        clearCache('.calc.property_price');
+        return $code;
+    }
+
+    public function mobileUpdate($data)
+    {
+        $code = $this->helper->randomCode(6);
+        $booking = Bookings::find($data['booking_id']);
+        $booking->transaction_id = $data['transaction_id'] ?? ' ';
+        $booking->payment_method_id = $data['payment_method_id'] ?? ' ';
+        $booking->code = $code;
+        $booking->attachment = $data['attachment'] ?? null;
+        $booking->mobile_id = $data['mobile_id'] ?? null;
+        $booking->note = $data['note'] ?? null;
+        $booking->status = 'Accepted';
+        if ($data['paymode'] == 'Mobile') {
+            $booking->status = 'Processing';
+        }
+        $booking->save();
+
+        $email_controller = new EmailController;
+        $email_controller->booking($booking->id, $data['checkin'], $data['paymode'] == 'Mobile');
+        $email_controller->booking_user($booking->id, $data['checkin']);
+
+        if ($booking->booking_type == "instant" && $data['paymode'] == 'Mobile') {
+            // TODO
+            // change bankAdminNotify to mobileAdminNotify
+            $email_controller->bankAdminNotify($booking->id, $data['checkin']);
+        }
+
+        if ($data['paymode'] <> 'Mobile') {
+            $this->addBookingPaymentInHostWallet($booking);
+        }
+
+        $dates = [];
+        $propertyCurrencyCode = PropertyPrice::firstWhere('property_id', $data['property_id'])->currency_code;
+        foreach ($data['price_list']->date_with_price as $dp) {
+            $tmp_date = setDateForDb($dp->date);
+
+            $property_data = [
+                'property_id' => $data['property_id'],
+                'status' => 'Not available',
+                'price' => $this->helper->convert_currency($data['price_list']->currency, $propertyCurrencyCode, $dp->original_price),
+                'date' => $tmp_date,
+            ];
+
+            PropertyDates::updateOrCreate(['property_id' => $booking->property_id, 'date' => $tmp_date], $property_data);
+            if ($data['paymode'] == 'Mobile') {
+                array_push($dates, ['booking_id' => $booking->id, 'date' => $tmp_date]);
+            }
+
+            if ($data['paymode'] == 'Mobile' && count($dates) > 0) {
+                MObileDate::insert($dates);
+            }
+        }
+
+        Bookings::where([['status', 'Processing'], ['property_id', $booking->property_id], ['start_date', $booking->start_date], ['payment_method_id', '!=', 5]])
+            ->orWhere([['status', 'Pending'], ['property_id', $booking->property_id], ['start_date', $booking->start_date], ['payment_method_id', '!=', 5]])
+            ->update(['status' => 'Expired']);
+
+        if (!$data['paymode'] == 'Mobile') {
+            Payouts::updateOrCreate(
+                [
+                    'booking_id' => $booking->id,
+                    'user_type' => 'host',
+                ],
+                [
+                    'user_id' => $booking->host_id,
+                    'property_id' => $booking->property_id,
+                    'amount' => $booking->original_host_payout,
+                    'currency_code' => $booking->currency_code,
+                    'status' => 'Future',
+                ]);
+        }
+
+        $message = new Messages;
+        $message->property_id = $data['property_id'];
+        $message->booking_id = $booking->id;
+        $message->sender_id = $booking->user_id;
+        $message->receiver_id = $booking->host_id;
+        $message->message = isset($data['message_to_host']) ? $data['message_to_host'] : '';
+        $message->type_id = 4;
+        $message->read = 0;
+        $message->save();
+
+        BookingDetails::where(['id' => $data['booking_id']])->update(['value' => $data['country']]);
+
+        $companyName = Settings::getAll()->where('type', 'general')->where('name', 'name')->first()->value;
+        $instantBookingConfirm = ($companyName . ': ' . 'Your booking is confirmed from' . ' ' . $booking->start_date . ' ' . 'to' . ' ' . $booking->end_date);
+        $instantBookingPaymentConfirm = ($companyName . ' ' . 'Your payment is completed for' . ' ' . $booking->properties->name);
+
+        if ($data['paymode'] == 'Mobile') {
+            $instantBookingConfirm = ($companyName . ': ' . 'Your booking is confirmed from' . ' ' . $booking->start_date . ' ' . 'to' . ' ' . $booking->end_date . '. Admin will approve the booking very soon');
+            $instantBookingPaymentConfirm = ($companyName . ' ' . 'Your payment is completed for' . ' ' . $booking->properties->name . '. Admin will approve the booking very soon');
+        }
+
+        twilioSendSms(Auth::user()->formatted_phone, $instantBookingConfirm);
+        twilioSendSms(Auth::user()->formatted_phone, $instantBookingPaymentConfirm);
+
+        Session::forget('payment_property_id');
+        Session::forget('payment_checkin');
+        Session::forget('payment_checkout');
+        Session::forget('payment_number_of_guests');
+        Session::forget('payment_booking_type');
+        Session::forget('payment_booking_status');
+        Session::forget('payment_booking_id');
 
         clearCache('.calc.property_price');
         return $code;
