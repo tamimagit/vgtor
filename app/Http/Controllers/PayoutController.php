@@ -5,7 +5,6 @@ namespace App\Http\Controllers;
 use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
 use App\Http\Helpers\Common;
-
 use App\Models\{MobileBanking,
     Settings,
     Country,
@@ -16,7 +15,6 @@ use App\Models\{MobileBanking,
     PaymentMethods,
     Currency
 };
-
 use App\DataTables\PayoutListDataTable;
 use Auth;
 use DB;
@@ -277,6 +275,7 @@ class PayoutController extends Controller
         $data['payouts'] = PayoutSetting::where(['user_id' => Auth::user()->id])->get();
         $data['currentCurrency'] = Currency::getAll()->firstWhere('code',
             Session::get('currency') ?? $this->helper->getCurrentCurrencyCode());
+
         return $dataTable->render('payoutlists.view', $data);
     }
 

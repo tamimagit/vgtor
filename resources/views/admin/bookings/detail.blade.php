@@ -386,16 +386,16 @@
                                     </div>
                                 @endif
 
-                                @if($bank->account_number != '')
-                                    <div class="form-group">
-                                        <label class="col-sm-3 control-label">
-                                            Host Bank account
-                                        </label>
-                                        <div class="col-sm-6 col-sm-offset-1">
-                                            {{$bank->account_number  }}
-                                        </div>
-                                    </div>
-                                @endif
+                                {{--                                @if($bank->account_number != '')--}}
+                                {{--                                    <div class="form-group">--}}
+                                {{--                                        <label class="col-sm-3 control-label">--}}
+                                {{--                                            Host Bank account--}}
+                                {{--                                        </label>--}}
+                                {{--                                        <div class="col-sm-6 col-sm-offset-1">--}}
+                                {{--                                            {{$bank->account_number  }}--}}
+                                {{--                                        </div>--}}
+                                {{--                                    </div>--}}
+                                {{--                                @endif--}}
 
                                 @if($result->guest_account != '')
                                     <div class="form-group">
@@ -419,7 +419,7 @@
                                     </div>
                                 @endif
 
-                                @if(@$penalty_amount != 0)
+                                @if($penalty_amount != 0)
                                     <div class="form-group">
                                         <label class="col-sm-3 control-label">
                                             Subtracted Penalty Amount
