@@ -16,72 +16,82 @@
 @section('main')
     <input type="hidden" id="front_date_format_type" value="{{ Session::get('front_date_format_type')}}">
     <section class="hero-banner magic-ball">
-        <div class="main-banner" style="background-image: url('{{ defined("BANNER_URL") ? BANNER_URL : '' }}');">
+        <div class="main-banner"
+             style="background-image: url('{{ defined("BANNER_URL") ? BANNER_URL : '' }}'); min-height: 40rem!important;">
             <div class="container">
                 <div class="row align-items-center text-center text-md-left">
+                    <div class="col-md-3"></div>
                     <div class="col-md-6 col-lg-5 mb-5 mb-md-0">
-                        <div class="main_formbg item animated zoomIn mt-80">
-                            <h1 class="pt-4 ">{{trans('messages.home.make_your_reservation')}}</h1>
+                        <div class="main_formbg item animated zoomIn mt-80" style="padding: 5px !important;">
+                            {{--<h1 class="pt-4 ">{{trans('messages.home.make_your_reservation')}}</h1>--}}
                             <form id="front-search-form" method="post" action="{{url('search')}}">
                                 {{ csrf_field() }}
-                                <div class="row">
-                                    <div class="col-md-12">
-                                        <div class="input-group pt-4">
-                                            <input class="form-control p-3 text-14" id="front-search-field"
-                                                   placeholder="{{trans('messages.home.where_want_to_go')}}"
-                                                   autocomplete="off" name="location" type="text" required>
-                                        </div>
-                                    </div>
+                                {{--                                <div class="row">--}}
+                                {{--                                <div class="col-md-12">--}}
+                                <div class="input-group">
+                                    <label for="front-search-field" class="hidden"></label>
+                                    <input class="form-control p-3 text-14" id="front-search-field"
+                                           placeholder="{{trans('messages.home.where_want_to_go')}}"
+                                           autocomplete="off" name="location" type="text" required>
 
-                                    <div class="col-md-12 mt-5">
-                                        <div class="d-flex" id="daterange-btn">
-                                            <div class="input-group mr-2 pt-4">
-                                                <input class="form-control p-3 border-right-0 border text-14 checkinout"
-                                                       name="checkin" id="startDate" type="text"
-                                                       placeholder="{{trans('messages.search.check_in')}}"
-                                                       autocomplete="off" readonly="readonly" required>
-                                                <span class="input-group-append">
-													<div class="input-group-text">
-														<i class="fa fa-calendar success-text text-14"></i>
-													</div>
-												</span>
-                                            </div>
-
-                                            <div class="input-group ml-2 pt-4">
-                                                <input class="form-control p-3 border-right-0 border text-14 checkinout"
-                                                       name="checkout" id="endDate"
-                                                       placeholder="{{trans('messages.search.check_out')}}" type="text"
-                                                       readonly="readonly" required>
-                                                <span class="input-group-append">
-													<div class="input-group-text">
-													<i class="fa fa-calendar success-text text-14"></i>
-													</div>
-												</span>
-                                            </div>
-                                        </div>
-                                    </div>
-
-                                    <div class="col-md-6 mt-5 pt-4">
-                                        <div class="input-group">
-                                            <select id="front-search-guests" class="form-control  text-14">
-                                                <option class="p-4 text-14" value="1">
-                                                    1 {{trans('messages.home.guest')}}</option>
-                                                @for($i=2;$i<=16;$i++)
-                                                    <option class="p-4 text-14"
-                                                            value="{{ $i }}"> {{ ($i == '16') ? $i.'+ '.trans('messages.home.guest') : $i.' '.trans('messages.property_single.guest') }} </option>
-                                                @endfor
-                                            </select>
-                                        </div>
-                                    </div>
-
-                                    <div class="col-md-12 front-search mt-5 pb-3 pt-4">
-                                        <button type="submit"
-                                                class="btn vbtn-default btn-block p-3 text-16">{{trans('messages.home.search')}}</button>
-                                    </div>
+                                    <button type="submit" class="btn vbtn-default btn-block p-3 text-16"
+                                            style="width: 40px; height: 44px; margin-left: 4px">
+                                        <i class="fa fa-search text-14"></i>
+                                    </button>
                                 </div>
+                                {{--                                </div>--}}
+
+                                {{--<div class="col-md-12 mt-5">
+                                    <div class="d-flex" id="daterange-btn">
+                                        <div class="input-group mr-2 pt-4">
+                                            <input class="form-control p-3 border-right-0 border text-14 checkinout"
+                                                   name="checkin" id="startDate" type="text"
+                                                   placeholder="{{trans('messages.search.check_in')}}"
+                                                   autocomplete="off" readonly="readonly" required>
+                                            <span class="input-group-append">
+                                                <div class="input-group-text">
+                                                    <i class="fa fa-calendar success-text text-14"></i>
+                                                </div>
+                                            </span>
+                                        </div>
+
+                                        <div class="input-group ml-2 pt-4">
+                                            <input class="form-control p-3 border-right-0 border text-14 checkinout"
+                                                   name="checkout" id="endDate"
+                                                   placeholder="{{trans('messages.search.check_out')}}" type="text"
+                                                   readonly="readonly" required>
+                                            <span class="input-group-append">
+                                                <div class="input-group-text">
+                                                <i class="fa fa-calendar success-text text-14"></i>
+                                                </div>
+                                            </span>
+                                        </div>
+                                    </div>
+                                </div>--}}
+
+                                {{--<div class="col-md-6 mt-5 pt-4">
+                                    <div class="input-group">
+                                        <select id="front-search-guests" class="form-control  text-14">
+                                            <option class="p-4 text-14" value="1">
+                                                1 {{trans('messages.home.guest')}}</option>
+                                            @for($i=2;$i<=16;$i++)
+                                                <option class="p-4 text-14"
+                                                        value="{{ $i }}"> {{ ($i == '16') ? $i.'+ '.trans('messages.home.guest') : $i.' '.trans('messages.property_single.guest') }} </option>
+                                            @endfor
+                                        </select>
+                                    </div>
+                                </div>--}}
+
+                                {{--                                    <div class="col-md-12 front-search mt-5 pb-3 pt-4">--}}
+                                {{--                                        <button type="submit" class="btn vbtn-default btn-block p-3 text-16">--}}
+                                {{--                                            {{trans('messages.home.search')}}--}}
+                                {{--                                        </button>--}}
+                                {{--                                    </div>--}}
+                                {{--                                </div>--}}
                             </form>
                         </div>
                     </div>
+                    <div class="col-md-3"></div>
                 </div>
             </div>
         </div>

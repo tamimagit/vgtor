@@ -35,7 +35,7 @@
 			<link rel="stylesheet" href="{{URL::to('/')}}/public/backend/plugins/daterangepicker/daterangepicker.css">
 			<!-- bootstrap wysihtml5 - text editor -->
 			<link rel="stylesheet" href="{{URL::to('/')}}/public/backend/plugins/bootstrap-wysihtml5/bootstrap3-wysihtml5.min.css">
-		
+
 			<!--datatable style-->
 			<link rel="stylesheet" href="{{URL::to('/')}}/public/backend/plugins/datatables/dataTables.bootstrap.css">
 			<link rel="stylesheet" href="{{URL::to('/')}}/public/backend/plugins/datatables/jquery.dataTables.css">
@@ -43,10 +43,10 @@
 			<link rel="stylesheet" href="{{URL::to('/')}}/public/backend/plugins/Responsive-2.2.2/css/responsive.dataTables.min.css">
 			<!--Select2-->
 
-			<link rel="stylesheet" type="text/css" href="{{ asset('public/js/intl-tel-input-13.0.0/build/css/intlTelInput.css')}}">  
+			<link rel="stylesheet" type="text/css" href="{{ asset('public/js/intl-tel-input-13.0.0/build/css/intlTelInput.css')}}">
 			<link href="{{ url('public/backend/plugins/select2/select2.min.css') }}" rel="stylesheet" type="text/css" />
-			<link href="{{ url('public/backend/css/style2.css') }}" rel="stylesheet" type="text/css" /> 
-			<link href="{{ url('public/backend/css/style.css') }}" rel="stylesheet" type="text/css" /> 
+			<link href="{{ url('public/backend/css/style2.css') }}" rel="stylesheet" type="text/css" />
+			<link href="{{ url('public/backend/css/style.css') }}" rel="stylesheet" type="text/css" />
 			<link href="{{ url('public/css/glyphicon.css') }}" rel="stylesheet" type="text/css" />
 			@stack('css')
 		</head>
