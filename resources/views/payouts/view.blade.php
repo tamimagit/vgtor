@@ -73,7 +73,12 @@
 
                                                 <div class="dates">
                                                     <div class="start">
-                                                        <strong>{{trans('messages.utility.payment_method')}}</strong> {{ $payout->payment_methods->name}}
+                                                        <strong>{{trans('messages.utility.payment_method')}}</strong>
+                                                        @if($payout->payment_methods->name == 'Mobile')
+                                                            {{ $payout->payment_methods->name . " Banking"}}
+                                                        @else
+                                                            {{ $payout->payment_methods->name}}
+                                                        @endif
                                                         <hr>
                                                     </div>
                                                     <div class="ends">
@@ -87,12 +92,14 @@
                                                             {{$payout->bank_name}}
                                                         @elseif($payout->payment_methods->name == 'Mobile')
                                                             @php($mobileBanking = mobileBanking($payout->mobile_banking_id))
-                                                            {{ $mobileBanking->name }}
-                                                            <img style="width: 25px; height: 25px;"
-                                                                src="{{ asset('public/front/images/mobile_bankings/' . $mobileBanking->image) }}"
-                                                                alt="">
-                                                            <br/>
-                                                            {{$payout->mobile_banking_number }}
+                                                            {{ $mobileBanking->name ?? '' }}
+                                                            @if(isset($mobileBanking->image))
+                                                                <img style="width: 25px; height: 25px;"
+                                                                     src="{{ asset('public/front/images/mobile_bankings/' . $mobileBanking->image) }}"
+                                                                     alt="">
+                                                                <br/>
+                                                            @endif
+                                                            {{$payout->mobile_banking_number ?? '' }}
                                                         @endif
                                                     </div>
                                                 </div>
@@ -274,9 +281,9 @@
                         <div class="col-md-6 d-none" id="mobile_banking_id">
                             <div class="form-group">
                                 <label for="exampleInputPassword1"
-                                       class="control-label">Mobile Banking</label>
+                                       class="control-label">Mobile Banking Operator</label>
                                 <select class="form-control" name="mobile_banking" id="mobile_banking">
-                                    <option value="0">Select mobile banking</option>
+                                    <option value="0">Select mobile banking operator</option>
                                 </select>
                             </div>
                         </div>
@@ -519,7 +526,7 @@
                                 <label
                                     for="exampleInputPassword1">{{trans('messages.account_preference.payout_method')}}</label>
                                 <select class="form-control" name="payout_type" id="payout_type" disabled="disabled">
-                                    <option value="5">Mobile</option>
+                                    <option value="5">Mobile Banking</option>
                                 </select>
                             </div>
                         </div>

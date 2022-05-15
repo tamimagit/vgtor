@@ -77,7 +77,7 @@
                                     {{--mobile method--}}
                                     @if($mobiles >= 1)
                                         <option value="mobile" data-payment-type="payment-method" data-cc-type="mobile"
-                                                data-cc-name="" data-cc-expire=""> Mobile
+                                                data-cc-name="" data-cc-expire=""> Mobile Banking
                                         </option>
                                     @endif
 

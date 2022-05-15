@@ -14,45 +14,39 @@ class PayoutListDataTable extends DataTable
     {
         return datatables()
             ->eloquent($this->query())
-
             ->addColumn('payment_method_id', function ($withDrawal) {
+                if ($withDrawal->payment_methods['name'] == 'Mobile') {
+                    return $withDrawal->payment_methods['name'] . " Banking";
+                }
 
                 return $withDrawal->payment_methods['name'];
             })
             ->addColumn('user_id', function ($withDrawal) {
-                $userName = ucfirst($withDrawal->user->first_name).' '.ucfirst($withDrawal->user->last_name);
+                $userName = ucfirst($withDrawal->user->first_name) . ' ' . ucfirst($withDrawal->user->last_name);
                 return $userName;
             })
-
-
             ->addColumn('subtotal', function ($withDrawal) {
                 if ($withDrawal->status == 'Success') {
+                    $subtotal = Session::get('symbol') . ' ' . currency_fix($withDrawal->amount, $withDrawal->currency->code);
+                } else {
+                    $subtotal = Session::get('symbol') . ' ' . currency_fix($withDrawal->subtotal, $withDrawal->currency->code);
+                }
 
-                        $subtotal = Session::get('symbol').' '.currency_fix($withDrawal->amount, $withDrawal->currency->code);
-
-                    } else {
-
-                        $subtotal = Session::get('symbol').' '.currency_fix($withDrawal->subtotal, $withDrawal->currency->code);
-                    }
-                    return $subtotal;
-                })
-
-            ->addColumn('created_at', function ($withDrawal) {
-            $dateFormat = dateFormat($withDrawal->created_at);
-            return $dateFormat;
+                return $subtotal;
             })
-
-            ->rawColumns(['payment_method_id','user_id','currency_id','subtotal','created_at'])
+            ->addColumn('created_at', function ($withDrawal) {
+                $dateFormat = dateFormat($withDrawal->created_at);
+                return $dateFormat;
+            })
+            ->rawColumns(['payment_method_id', 'user_id', 'currency_id', 'subtotal', 'created_at'])
             ->make(true);
-
     }
 
     public function query()
     {
-        $from     = isset(request()->from) ? setDateForDb(request()->from) : null;
-        $to       = isset(request()->to) ? setDateForDb(request()->to) : null;
-
-        $query    = Withdrawal::where(['user_id' => Auth::user()->id]);
+        $from = isset(request()->from) ? setDateForDb(request()->from) : null;
+        $to = isset(request()->to) ? setDateForDb(request()->to) : null;
+        $query = Withdrawal::where(['user_id' => Auth::user()->id]);
 
         if (!empty($from)) {
             $query->whereDate('withdrawals.created_at', '>=', $from);
@@ -69,14 +63,13 @@ class PayoutListDataTable extends DataTable
     {
         return $this->builder()
             ->addColumn(['data' => 'id', 'name' => 'id', 'title' => 'ID', 'visible' => false])
-             ->addColumn(['data' => 'user_id', 'name' => 'user_id', 'title' => trans('messages.utility.account')])
-             ->addColumn(['data' => 'payment_method_id', 'name' => 'payment_method_id', 'title' => trans('messages.utility.payment_method')])
+            ->addColumn(['data' => 'user_id', 'name' => 'user_id', 'title' => trans('messages.utility.account')])
+            ->addColumn(['data' => 'payment_method_id', 'name' => 'payment_method_id', 'title' => trans('messages.utility.payment_method')])
             ->addColumn(['data' => 'subtotal', 'name' => 'subtotal', 'title' => trans('messages.account_transaction.amount')])
             ->addColumn(['data' => 'status', 'name' => 'status', 'title' => trans('messages.account_transaction.status')])
             ->addColumn(['data' => 'created_at', 'name' => 'created_at', 'title' => trans('messages.account_transaction.date')])
-             ->parameters(dataTableOptions());
+            ->parameters(dataTableOptions());
     }
-
 
     protected function filename()
     {

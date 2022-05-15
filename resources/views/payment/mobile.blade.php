@@ -19,17 +19,25 @@
                         <input name="booking_type" type="hidden" value="{{ $booking_type }}">
 
                         <div class="col-sm-12 p-0">
-                            <label for="message">{{trans('messages.payment.bank_select')}}</label>
+                            <label for="message">Please select a mobile banking account number</label>
                         </div>
 
                         <div class="col-sm-12 p-0 pb-3">
-                            <select id="bank-select" required name="mobile" class="form-control mb20">
+                            <select id="mobile-select" required name="mobile" class="form-control mb20">
                                 @foreach($mobiles as $mobile)
                                     <option value="{{ $mobile->id }}" @if($loop->first) selected @endif>
-                                        {{ $mobile->name . " (" . $mobile->mobile_no . ")" }}
+                                        {{ $mobile->name . " " . $mobile->mobile_no }}
                                     </option>
                                 @endforeach
                             </select>
+                        </div>
+
+                        <div class="col-sm-12 p-0 pb-3">
+                            @foreach($mobiles as $mobile)
+                                <div class="mobiles {{ $loop->first ? '' : 'hide' }}" id="{{ $mobile->id }}">
+                                    <p>{{ $mobile->message }}</p>
+                                </div>
+                            @endforeach
                         </div>
 
                         <div class="col-sm-12 p-3 my-2 border-ddd border-r-10">
@@ -248,9 +256,9 @@
     @push('scripts')
         <script type="text/javascript" src="{{ url('public/js/jquery.validate.min.js') }}"></script>
         <script type="text/javascript">
-            $(document).on('change', '#bank-select', () => {
-                $('.banks').hide();
-                $('#' + $('#bank-select').val()).show();
+            $(document).on('change', '#mobile-select', () => {
+                $('.mobiles').hide();
+                $('#' + $('#mobile-select').val()).show();
             })
         </script>
     @endpush

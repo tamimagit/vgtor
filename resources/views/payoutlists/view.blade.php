@@ -143,14 +143,18 @@
                                             @foreach($payouts as $payout)
                                                 <option value="{{$payout->id}}">
                                                     @if($payout->type == 1)
-                                                        Paypal ({{$payout->email}})
+                                                        {{$payout->email}} (Paypal)
                                                     @elseif($payout->type == 4)
-                                                        Bank ({{$payout->account_number}})
+                                                        {{$payout->account_number}} (Bank)
                                                     @elseif($payout->type == 5)
                                                         @php($mobileBanking = mobileBanking($payout->mobile_banking_id))
-                                                        Mobile Banking
-                                                        ({{$mobileBanking->name . ' - ' . $payout->mobile_banking_number}}
-                                                        )
+                                                        @if(isset($mobileBanking->name))
+                                                            {{ $mobileBanking->name }}
+                                                        @endif
+                                                        @if(isset($payout->mobile_banking_number))
+                                                            {{ $payout->mobile_banking_number }}
+                                                        @endif
+                                                        (Mobile Banking)
                                                     @endif
                                                 </option>
                                             @endforeach
