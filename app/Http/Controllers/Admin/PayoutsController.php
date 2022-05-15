@@ -148,6 +148,7 @@ class PayoutsController extends Controller
                     $withDrawal->currency_id = $wallet->currency_id;
                     $withDrawal->status = $request->status;
                     $withDrawal->amount = $subTotal;
+                    $withDrawal->note = $request->note;
                     $withDrawal->subtotal = 0;
                     $withDrawal->save();
                     $balance = ($wallet->balance - $subTotal);
