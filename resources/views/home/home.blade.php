@@ -99,7 +99,7 @@
 
                 <div class="row mt-2">
                     @foreach($starting_cities as $city)
-                        <div class="col-md-4 mt-5">
+                        <div class="col-lg-3 col-md-4 mt-5">
                             <a href="{{URL::to('/')}}/search?location={{ $city->name }}&checkin=&checkout=&guest=1">
                                 <div class="grid item animated zoomIn">
                                     <figure class="effect-ming">
