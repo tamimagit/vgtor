@@ -17,11 +17,11 @@
     <input type="hidden" id="front_date_format_type" value="{{ Session::get('front_date_format_type')}}">
     <section class="hero-banner magic-ball">
         <div class="main-banner"
-             style="background-image: url('{{ defined("BANNER_URL") ? BANNER_URL : '' }}'); min-height: 40rem!important;">
+             style="background-image: url('{{ defined("BANNER_URL") ? BANNER_URL : '' }}'); min-height: 27rem!important;">
             <div class="container">
                 <div class="row align-items-center text-center text-md-left">
                     <div class="col-md-3"></div>
-                    <div class="col-md-6 col-lg-5 mb-5 mb-md-0">
+                    <div class="col-md-6 col-lg-6 mb-5 mb-md-0">
                         <div class="main_formbg item animated zoomIn mt-80" style="padding: 5px !important;">
                             {{--<h1 class="pt-4 ">{{trans('messages.home.make_your_reservation')}}</h1>--}}
                             <form id="front-search-form" method="post" action="{{url('search')}}">
@@ -98,16 +98,16 @@
     </section>
 
     @if(!$starting_cities->isEmpty())
-        <section class="bg-gray mt-70 pb-2">
+        <section class="bg-gray mt-70 pb-2" style="margin-top: 30px!important;">
             <div class="container-fluid container-fluid-95">
                 <div class="row">
                     <div class="section-intro text-center">
                         <p class="item animated fadeIn text-24 font-weight-700 m-0 text-capitalize">{{trans('messages.home.top_destination')}}</p>
-                        <p class="mt-3">{{trans('messages.home.destination_slogan')}} </p>
+                        {{--<p class="mt-3">{{trans('messages.home.destination_slogan')}} </p>--}}
                     </div>
                 </div>
 
-                <div class="row mt-2">
+                <div class="row">
                     @foreach($starting_cities as $city)
                         <div class="col-lg-3 col-md-4 mt-5">
                             <a href="{{URL::to('/')}}/search?location={{ $city->name }}&checkin=&checkout=&guest=1">
@@ -131,13 +131,14 @@
         <section class="bg-gray mt-4 magic-ball magic-ball-about pb-5">
             <div class="container-fluid container-fluid-95">
                 <div class="row">
-                    <div class="recommandedhead section-intro text-center mt-70">
-                        <p class="item animated fadeIn text-24 font-weight-700 m-0">{{trans('messages.home.recommended_home')}}</p>
-                        <p class="mt-2">{{trans('messages.home.recommended_slogan')}}</p>
+                    <div class="recommandedhead section-intro text-center" style="margin-top: 0px!important;">
+                        {{--<p class="item animated fadeIn text-24 font-weight-700 m-0">{{trans('messages.home.recommended_home')}}</p>--}}
+                        <p class="item animated fadeIn text-24 font-weight-700 m-0">Recommended Space</p>
+                        {{--<p class="mt-2">{{trans('messages.home.recommended_slogan')}}</p>--}}
                     </div>
                 </div>
 
-                <div class="row mt-5">
+                <div class="row" style="margin-top: 13px !important;">
                     @foreach($properties as $property)
                         <div class="col-md-6 col-lg-4 col-xl-3 pl-3 pr-3 pb-3 mt-4">
                             <div class="card h-100 card-shadow card-1">
@@ -255,13 +256,13 @@
             <div class="testimonials">
                 <div class="container">
                     <div class="row">
-                        <div class="recommandedhead section-intro text-center mt-70">
+                        <div class="recommandedhead section-intro text-center">
                             <p class="animated fadeIn text-24 text-color font-weight-700 m-0">{{ trans('messages.home.say_about_us') }}</p>
-                            <p class="mt-2">{{trans('messages.home.people_say')}}</p>
+                            {{--<p class="mt-2">{{trans('messages.home.people_say')}}</p>--}}
                         </div>
                     </div>
 
-                    <div class="row mt-5">
+                    <div class="row" style="margin-top: 16px!important;">
                         @foreach($testimonials as $testimonial)
                             <?php $i = 0; ?>
                             <div class="col-md-4 mt-4">

@@ -32,10 +32,10 @@ $lang = Session::get('language');
                         @endif
 
                         @if(!Auth::check())
-                            <div class="nav-item">
+                            {{--<div class="nav-item">
                                 <a class="nav-link" href="{{ url('signup') }}"
                                    aria-label="signup">{{trans('messages.sign_up.sign_up')}}</a>
-                            </div>
+                            </div>--}}
                             <div class="nav-item">
                                 <a class="nav-link" href="{{ url('login') }}"
                                    aria-label="login">{{trans('messages.header.login')}}</a>
@@ -147,6 +147,24 @@ $lang = Session::get('language');
                             <li><i class="fas fa-user-edit mr-3"></i>{{trans('messages.sidenav.reviews')}}</li>
                         </a>
 
+                        <li>
+                            <a href="#" aria-label="modalLanguge" data-toggle="modal"
+                               data-target="#languageModalCenter">
+                                <i class="fa fa-globe" style="margin-right: 0"></i>
+                                &nbsp; {{  Session::get('language_name')  ?? $default_language[0]->name }}
+                            </a>
+                        </li>
+
+                        <li>
+                            <a href="#" aria-label="modalCurrency" data-toggle="modal"
+                               data-target="#currencyModalCenter">
+                            <span class="">
+                            {!! Session::get('symbol')  !!} -
+                            <u>{{ Session::get('currency')  }}</u>
+                        </span>
+                            </a>
+                        </li>
+
                         <div class="collapse" id="collapseExample">
                             <ul class="ml-4">
                                 <li><a href="{{ url('users/reviews') }}"
@@ -162,21 +180,25 @@ $lang = Session::get('language');
                                     class="fas fa-stream mr-3"></i>{{trans('messages.sign_up.sign_up')}}</a></li>
                         <li><a href="{{ url('login') }}"><i
                                     class="far fa-list-alt mr-3"></i>{{trans('messages.header.login')}}</a></li>
-                    @endif
-                    <li>
-                        <a href="#" aria-label="modalLanguge" data-toggle="modal" data-target="#languageModalCenter">
-                            <i class="fa fa-globe" style="margin-right: 0"></i> &nbsp; {{  Session::get('language_name')  ?? $default_language[0]->name }}
-                        </a>
-                    </li>
 
-                    <li>
-                        <a href="#" aria-label="modalCurrency" data-toggle="modal" data-target="#currencyModalCenter">
+                        <li>
+                            <a href="#" aria-label="modalLanguge" data-toggle="modal"
+                               data-target="#languageModalCenter">
+                                <i class="fa fa-globe" style="margin-right: 0"></i>
+                                &nbsp; {{  Session::get('language_name')  ?? $default_language[0]->name }}
+                            </a>
+                        </li>
+
+                        <li>
+                            <a href="#" aria-label="modalCurrency" data-toggle="modal"
+                               data-target="#currencyModalCenter">
                             <span class="">
                             {!! Session::get('symbol')  !!} -
                             <u>{{ Session::get('currency')  }}</u>
                         </span>
-                        </a>
-                    </li>
+                            </a>
+                        </li>
+                    @endif
                 </ul>
             </div>
         </div>

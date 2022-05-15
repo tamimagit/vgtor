@@ -36,13 +36,13 @@
                         <input type="hidden" name="formatted_phone" id="formatted_phone" class="form-control">
 
                         <div class="row" style="padding-bottom: 15px; width: 100%">
-                            <div class="form-group col-sm-6 p-0">
+                            <div class="form-group col-6 p-0 text-center">
                                 <a href="{{URL::to('/')}}/login?" class="font-weight-600">
                                     {{trans('messages.sign_up.login')}}
                                 </a>
                             </div>
 
-                            <div class="form-group col-sm-6 p-0">
+                            <div class="form-group col-6 p-0 text-center">
                                 <a href="{{URL::to('/')}}/signup" class="font-weight-600">
                                     {{trans('messages.login.register')}}
                                 </a>
@@ -83,7 +83,8 @@
                         </div>
 
                         <div class="form-group col-sm-12 p-0">
-                            <label for="first_name">{{ trans('messages.users_profile.phone') }}</label>
+                            <label for="first_name">{{ trans('messages.users_profile.phone') }}<span
+                                    class="text-13 text-danger">*</span></label>
                             <input type="tel" class="form-control text-14 p-2" id="phone" name="phone">
                             <span id="tel-error" class="text-13 text-danger"></span>
                             <span id="phone-error" class="text-13 text-danger"></span>
@@ -254,6 +255,9 @@
                 birthday_year: {
                     required: true,
                     minAge: 18
+                },
+                phone: {
+                    required: true,
                 }
             },
             submitHandler: function (form) {

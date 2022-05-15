@@ -48,13 +48,13 @@
                 <form id="login_form" method="post" action="{{url('authenticate')}}" accept-charset='UTF-8'>
                     {{ csrf_field() }}
                     <div class="row" style="padding-bottom: 15px">
-                        <div class="form-group col-sm-6 p-0">
+                        <div class="form-group col-6 p-0 text-center">
                             <a href="{{URL::to('/')}}/login?" class="font-weight-600">
                                 {{trans('messages.sign_up.login')}}
                             </a>
                         </div>
 
-                        <div class="form-group col-sm-6 p-0">
+                        <div class="form-group col-6 p-0 text-center">
                             <a href="{{URL::to('/')}}/signup" class="font-weight-600">
                                 {{trans('messages.login.register')}}
                             </a>

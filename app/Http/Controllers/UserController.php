@@ -54,6 +54,7 @@ class UserController extends Controller
             'birthday_day' => 'required',
             'birthday_month' => 'required',
             'birthday_year' => 'required',
+            'phone' => 'required',
         );
 
         $messages = array(
@@ -61,6 +62,7 @@ class UserController extends Controller
             'birthday_day.required' => 'Birth date field is required.',
             'birthday_month.required' => 'Birth date field is required.',
             'birthday_year.required' => 'Birth date field is required.',
+            'phone.required' => 'Phone number is required.',
         );
 
         $fieldNames = array(
