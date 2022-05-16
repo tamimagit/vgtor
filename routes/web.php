@@ -189,13 +189,6 @@ Route::group(['prefix' => 'admin', 'namespace' => 'Admin', 'middleware' => ['gue
             return 'Migrate!';
         });
 
-        // Custom db see with class
-        // Add Mobile to payment_methods table
-        Route::get('settings/seed/', function () {
-            Artisan::call("db:seed --class=MobileBankingSeeder");
-            return 'Seed!';
-        });
-
         Route::group(['middleware' => 'permission:starting_cities_settings'], function () {
             Route::get('settings/starting-cities', 'StartingCitiesController@index');
             Route::match(array('GET', 'POST'), 'settings/add-starting-cities', 'StartingCitiesController@add');

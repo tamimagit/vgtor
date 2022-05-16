@@ -18,6 +18,7 @@ class PaymentMethodsTableSeeder extends Seeder
             ['name' => 'Stripe', 'status' => 'Active'],
             ['name' => 'Wallet', 'status' => 'Active'],
             ['name' => 'Bank', 'status' => 'Active'],
+            ['name' => 'Mobile', 'status' => 'Active']
         ]);
     }
 }
