@@ -176,10 +176,11 @@ $lang = Session::get('language');
                         <li><a href="{{ url('logout') }}"><i
                                     class="fas fa-sign-out-alt mr-3"></i>{{trans('messages.header.logout')}}</a></li>
                     @else
-                        <li><a href="{{ url('signup') }}"><i
-                                    class="fas fa-stream mr-3"></i>{{trans('messages.sign_up.sign_up')}}</a></li>
-                        <li><a href="{{ url('login') }}"><i
-                                    class="far fa-list-alt mr-3"></i>{{trans('messages.header.login')}}</a></li>
+                        {{--<li>
+                            <a href="{{ url('signup') }}">
+                                <i class="fas fa-stream mr-3"></i>{{trans('messages.sign_up.sign_up')}}
+                            </a>
+                        </li>--}}
 
                         <li>
                             <a href="#" aria-label="modalLanguge" data-toggle="modal"
@@ -196,6 +197,12 @@ $lang = Session::get('language');
                             {!! Session::get('symbol')  !!} -
                             <u>{{ Session::get('currency')  }}</u>
                         </span>
+                            </a>
+                        </li>
+
+                        <li>
+                            <a href="{{ url('login') }}">
+                                <i class="far fa-list-alt mr-3"></i>{{trans('messages.header.login')}}
                             </a>
                         </li>
                     @endif

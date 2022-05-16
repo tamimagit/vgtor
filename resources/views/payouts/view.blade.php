@@ -124,10 +124,9 @@
                                                                     class="fas fa-edit secondary-text-color"></i></a>
                                                             {{--mobile modal--}}
                                                         @elseif($payout->type == 5)
-                                                            <a class="p-2 editmodal3" data-toggle="modal"
-                                                               data-id="{{ $payout->id }}" data-target=".edit-modal3"
-                                                               data-obj="{{json_encode($payout->getAttributes())}}"><i
-                                                                    class="fas fa-edit secondary-text-color"></i></a>
+                                                            {{--<a class="p-2 editmodal3" data-toggle="modal" data-id="{{ $payout->id }}" data-target=".edit-modal3" data-obj="{{json_encode($payout->getAttributes())}}">
+                                                                <i class="fas fa-edit secondary-text-color"></i>
+                                                            </a>--}}
                                                         @endif
                                                         <input type="hidden" name="id" value="{{ $payout->id }}">
                                                         <a class="delete-confirm"

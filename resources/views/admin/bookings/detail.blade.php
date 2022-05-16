@@ -419,7 +419,7 @@
                                     </div>
                                 @endif
 
-                                @if($penalty_amount != 0)
+                                @if(isset($penalty_amount) && $penalty_amount != 0)
                                     <div class="form-group">
                                         <label class="col-sm-3 control-label">
                                             Subtracted Penalty Amount
