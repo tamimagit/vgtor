@@ -18,7 +18,13 @@
                                 </tr>
                                 <tr>
                                     <th class="text-center">Payment Method</th>
-                                    <td>{{ $withDrawal->payment_methods->name }}</td>
+                                    <td>
+                                        @if($withDrawal->payment_methods->name == 'Mobile')
+                                            {{ $withDrawal->payment_methods->name . " Banking" }}
+                                        @else
+                                            {{ $withDrawal->payment_methods->name }}
+                                        @endif
+                                    </td>
                                 </tr>
                                 <tr>
                                     <th class="text-center">Payout Amount</th>

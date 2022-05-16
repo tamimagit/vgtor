@@ -94,7 +94,7 @@
                                                             @php($mobileBanking = mobileBanking($payout->mobile_banking_id))
                                                             {{ $mobileBanking->name ?? '' }}
                                                             @if(isset($mobileBanking->image))
-                                                                <img style="width: 25px; height: 25px;"
+                                                                <img style="width: 100px; height: auto;"
                                                                      src="{{ asset('public/front/images/mobile_bankings/' . $mobileBanking->image) }}"
                                                                      alt="">
                                                                 <br/>

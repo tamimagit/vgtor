@@ -36,6 +36,7 @@
                             @foreach($mobiles as $mobile)
                                 <div class="mobiles {{ $loop->first ? '' : 'hide' }}" id="{{ $mobile->id }}">
                                     <p>{{ $mobile->message }}</p>
+                                    <img src="{{ asset('public/front/images/mobile_bankings/' . $mobile->image) }}" width="200" height="100">
                                 </div>
                             @endforeach
                         </div>

@@ -152,7 +152,7 @@ class PayoutController extends Controller
                 $paymentAccount->user_id = Auth::user()->id;
                 $paymentAccount->account = Auth::user()->email;
                 $paymentAccount->currency_code = $currency_code;
-                $paymentAccount->payment_method_id = 4;
+                $paymentAccount->payment_method_id = 5;
                 $paymentAccount->selected = 'No';
                 $paymentAccount->save();
 
@@ -242,7 +242,7 @@ class PayoutController extends Controller
                 $payoutSetting->type = $request->payout_type;
                 $payoutSetting->email = Auth::user()->email;
                 $payoutSetting->country = $request->country;
-                $payoutSetting->mobile_banking_id = $request->mobile_banking_id;
+                // $payoutSetting->mobile_banking_id = $request->mobile_banking_id;
                 $payoutSetting->mobile_banking_number = $request->mobile_banking_number;
                 $payoutSetting->save();
                 $this->helper->one_time_message('success', "Updated Successfully");

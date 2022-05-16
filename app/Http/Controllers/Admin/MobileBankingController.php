@@ -33,7 +33,7 @@ class MobileBankingController extends Controller
             $rules = array(
                 'name' => 'required|max:100',
                 'mobile_no' => 'required|max:100',
-                'message' => 'required|max:100',
+                'message' => 'required',
                 'image' => 'required'
             );
 
@@ -87,7 +87,7 @@ class MobileBankingController extends Controller
             $rules = array(
                 'name' => 'required|max:100',
                 'mobile_no' => 'required|max:100',
-                'message' => 'required|max:100',
+                'message' => 'required',
             );
 
             $fieldNames = array(
