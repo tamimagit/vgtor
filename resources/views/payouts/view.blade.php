@@ -110,24 +110,24 @@
                                                           method="post" id="delete-payout-form">
                                                         {{ csrf_field() }}
 
-                                                        {{--bank modal--}}
-                                                        @if($payout->type == 4)
-                                                            <a class="p-2 editmodal" data-toggle="modal"
-                                                               data-id="{{ $payout->id }}" data-target=".edit-modal"
-                                                               data-obj="{{json_encode($payout->getAttributes())}}"><i
-                                                                    class="fas fa-edit secondary-text-color"></i></a>
-                                                            {{--paypal modal--}}
-                                                        @elseif($payout->type == 1)
-                                                            <a class="p-2 editmodal2" data-toggle="modal"
-                                                               data-id="{{ $payout->id }}" data-target=".edit-modal2"
-                                                               data-obj="{{json_encode($payout->getAttributes())}}"><i
-                                                                    class="fas fa-edit secondary-text-color"></i></a>
-                                                            {{--mobile modal--}}
-                                                        @elseif($payout->type == 5)
-                                                            {{--<a class="p-2 editmodal3" data-toggle="modal" data-id="{{ $payout->id }}" data-target=".edit-modal3" data-obj="{{json_encode($payout->getAttributes())}}">
-                                                                <i class="fas fa-edit secondary-text-color"></i>
-                                                            </a>--}}
-                                                        @endif
+{{--                                                        --}}{{--bank modal--}}
+{{--                                                        @if($payout->type == 4)--}}
+{{--                                                            <a class="p-2 editmodal" data-toggle="modal"--}}
+{{--                                                               data-id="{{ $payout->id }}" data-target=".edit-modal"--}}
+{{--                                                               data-obj="{{json_encode($payout->getAttributes())}}"><i--}}
+{{--                                                                    class="fas fa-edit secondary-text-color"></i></a>--}}
+{{--                                                            --}}{{--paypal modal--}}
+{{--                                                        @elseif($payout->type == 1)--}}
+{{--                                                            <a class="p-2 editmodal2" data-toggle="modal"--}}
+{{--                                                               data-id="{{ $payout->id }}" data-target=".edit-modal2"--}}
+{{--                                                               data-obj="{{json_encode($payout->getAttributes())}}"><i--}}
+{{--                                                                    class="fas fa-edit secondary-text-color"></i></a>--}}
+{{--                                                            --}}{{--mobile modal--}}
+{{--                                                        @elseif($payout->type == 5)--}}
+{{--                                                            <a class="p-2 editmodal3" data-toggle="modal" data-id="{{ $payout->id }}" data-target=".edit-modal3" data-obj="{{json_encode($payout->getAttributes())}}">--}}
+{{--                                                                <i class="fas fa-edit secondary-text-color"></i>--}}
+{{--                                                            </a>--}}
+{{--                                                        @endif--}}
                                                         <input type="hidden" name="id" value="{{ $payout->id }}">
                                                         <a class="delete-confirm"
                                                            data-name="{{ $payout->payment_methods->name}}"><i
