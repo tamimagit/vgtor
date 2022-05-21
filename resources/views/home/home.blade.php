@@ -10,6 +10,16 @@
         .btn-outline-danger:hover {
             background: #dc3545 !important;
         }
+
+        .main-banner {
+            min-height: 27rem !important;
+        }
+
+        @media (min-width: 769px) {
+            .main-banner {
+                min-height: 35rem !important;
+            }
+        }
     </style>
 @endpush
 
@@ -17,7 +27,7 @@
     <input type="hidden" id="front_date_format_type" value="{{ Session::get('front_date_format_type')}}">
     <section class="hero-banner magic-ball">
         <div class="main-banner"
-             style="background-image: url('{{ defined("BANNER_URL") ? BANNER_URL : '' }}'); min-height: 27rem!important;">
+             style="background-image: url('{{ defined("BANNER_URL") ? BANNER_URL : '' }}');">
             <div class="container">
                 <div class="row align-items-center text-center text-md-left">
                     <div class="col-md-3"></div>
@@ -98,7 +108,7 @@
     </section>
 
     @if(!$starting_cities->isEmpty())
-        <section class="bg-gray mt-70 pb-2" style="margin-top: 30px!important;">
+        <section class="bg-gray mt-70 pb-2" style="margin-top: 10px!important;">
             <div class="container-fluid container-fluid-95">
                 <div class="row">
                     <div class="section-intro text-center">
@@ -109,7 +119,7 @@
 
                 <div class="row">
                     @foreach($starting_cities as $city)
-                        <div class="col-lg-3 col-md-4 mt-5">
+                        <div class="col-lg-3 col-md-4 mt-3">
                             <a href="{{URL::to('/')}}/search?location={{ $city->name }}&checkin=&checkout=&guest=1">
                                 <div class="grid item animated zoomIn">
                                     <figure class="effect-ming">
@@ -128,7 +138,7 @@
     @endif
 
     @if(!$properties->isEmpty())
-        <section class="bg-gray mt-4 magic-ball magic-ball-about pb-5">
+        <section class="bg-gray magic-ball magic-ball-about pb-3">
             <div class="container-fluid container-fluid-95">
                 <div class="row">
                     <div class="recommandedhead section-intro text-center" style="margin-top: 0px!important;">
@@ -138,7 +148,7 @@
                     </div>
                 </div>
 
-                <div class="row" style="margin-top: 13px !important;">
+                <div class="row" style="margin-top: 7px!important;">
                     @foreach($properties as $property)
                         <div class="col-md-6 col-lg-4 col-xl-3 pl-3 pr-3 pb-3 mt-4">
                             <div class="card h-100 card-shadow card-1">
@@ -262,7 +272,7 @@
                         </div>
                     </div>
 
-                    <div class="row" style="margin-top: 16px!important;">
+                    <div class="row" style="margin-top: 3px!important;">
                         @foreach($testimonials as $testimonial)
                             <?php $i = 0; ?>
                             <div class="col-md-4 mt-4">
