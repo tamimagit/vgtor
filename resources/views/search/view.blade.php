@@ -1054,7 +1054,7 @@
 
             // Close map on page load
             $(document).ready(function () {
-                $("#closeMap").click()
+                //$("#closeMap").click()
             });
 
             $(window).on("load", function () {
