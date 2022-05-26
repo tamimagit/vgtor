@@ -51,7 +51,7 @@
                                 </div>
                                 {{--                                </div>--}}
 
-                                {{--<div class="col-md-12 mt-5">
+                                <div class="col-md-12 mt-5" style="display: none">
                                     <div class="d-flex" id="daterange-btn">
                                         <div class="input-group mr-2 pt-4">
                                             <input class="form-control p-3 border-right-0 border text-14 checkinout"
@@ -77,7 +77,7 @@
                                             </span>
                                         </div>
                                     </div>
-                                </div>--}}
+                                </div>
 
                                 {{--<div class="col-md-6 mt-5 pt-4">
                                     <div class="input-group">
