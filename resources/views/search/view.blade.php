@@ -1052,15 +1052,11 @@
                 getProperties($('#map_view').locationpicker('map').map);
             });
 
-            // Close map on page load
-            $(document).ready(function () {
-                //$("#closeMap").click()
-            });
-
             $(window).on("load", function () {
                 allowRefresh = true;
                 loadPage = '{{url("search/result")}}';
                 getProperties($('#map_view').locationpicker('map').map);
+                $("#closeMap").click()
             });
         </script>
 
